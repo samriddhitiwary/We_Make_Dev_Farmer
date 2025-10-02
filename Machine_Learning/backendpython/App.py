@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from api.grade_crop import router as grade_crop_router
 from api.detect_disease import router as detect_disease_router
 from api.mandi_price import router as mandi_price_router  # <-- import mandi_price router
-from api.crop_recommendation import  router as recommend_crop;
+# from api.crop_recommendation import  router as recommend_crop;
 from api.chatbot import router as chatbot;
 import uvicorn
 
@@ -22,7 +22,7 @@ app.add_middleware(
 app.include_router(grade_crop_router)
 app.include_router(detect_disease_router)
 app.include_router(mandi_price_router)  # <-- include it here
-app.include_router(recommend_crop) 
+# app.include_router(recommend_crop) 
 
 app.include_router(chatbot) 
 

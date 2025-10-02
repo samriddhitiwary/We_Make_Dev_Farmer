@@ -4,6 +4,7 @@ import pickle
 import xgboost as xgb
 import pandas as pd
 import datetime
+import os
 
 router = APIRouter()
 
@@ -16,7 +17,12 @@ class MandiInput(BaseModel):
     grade: str = None
     date: str = None
 
-MODEL_DIR = r"C:\Users\samri\cod\git\Farmer\Machine_Learning\AI Prices Mandi Predictor"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_DIR = os.path.join(
+    BASE_DIR,
+    "..", "..", "AI Prices Mandi Predictor"
+)
+MODEL_DIR = os.path.normpath(MODEL_DIR)
 
 with open(f"{MODEL_DIR}/aimandi_predictor_Min_Price.pkl", "rb") as f:
     min_model = pickle.load(f)

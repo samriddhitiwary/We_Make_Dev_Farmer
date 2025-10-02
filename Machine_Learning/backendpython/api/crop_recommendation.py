@@ -4,11 +4,18 @@ from pydantic import BaseModel
 import pandas as pd
 import xgboost as xgb
 from sklearn.preprocessing import LabelEncoder
+import os
 
 router = APIRouter()
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_PATH = os.path.join(
+    BASE_DIR,
+    "..", "..", "Soil Classification", "crop_yield_dataset.csv"
+)
+DATA_PATH = os.path.normpath(DATA_PATH)
+
 # --- Load dataset ---
-DATA_PATH = r"C:\Users\samri\cod\git\Farmer\Machine_Learning\Soil Classification\crop_yield_dataset.csv"
 df = pd.read_csv(DATA_PATH)
 
 # Handle Date and Season
@@ -36,7 +43,11 @@ df['Crop_enc'] = le_crop.fit_transform(df['Crop_Type'])
 soil_avg = df.groupby('Soil_Type').mean(numeric_only=True)
 
 # --- Load XGBoost model ---
-MODEL_PATH = r"C:\Users\samri\cod\git\Farmer\Machine_Learning\Soil Classification\best_crop_model.json"
+MODEL_PATH = os.path.join(
+    BASE_DIR,
+    "..", "..", "Soil Classification", "best_crop_model.json"
+)
+MODEL_PATH = os.path.normpath(MODEL_PATH)
 bst = xgb.Booster()
 bst.load_model(MODEL_PATH)
 

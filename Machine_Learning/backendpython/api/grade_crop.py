@@ -4,11 +4,18 @@ from tensorflow.keras.activations import softmax
 from PIL import Image
 import numpy as np
 from io import BytesIO
+import os
 
 router = APIRouter()
 
 # Load Quality Model
-QUALITY_MODEL_PATH = r"C:\Users\samri\cod\git\Farmer\Machine_Learning\Crop Quality Grading\best_model.h5"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+QUALITY_MODEL_PATH = os.path.join(
+    BASE_DIR,
+    "..", "..", "Crop Quality Grading", "best_model.h5"
+)
+QUALITY_MODEL_PATH = os.path.normpath(QUALITY_MODEL_PATH)
+
 QUALITY_INPUT_SIZE = (180, 180)
 QUALITY_BACKEND_CLASSES = ['Bad Quality_Fruits', 'Good Quality_Fruits', 'Mixed Qualit_Fruits']
 QUALITY_OUTPUT_GRADES = ['C', 'A', 'B']

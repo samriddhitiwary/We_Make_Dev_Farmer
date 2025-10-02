@@ -5,11 +5,18 @@ from PIL import Image
 import numpy as np
 from io import BytesIO
 import httpx
+import os
 
 router = APIRouter()
 
 # Load Disease Model
-DISEASE_MODEL_PATH = r"C:\Users\samri\cod\git\Farmer\Machine_Learning\Crop Disease Detection\new_leaf_disease_model.h5"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DISEASE_MODEL_PATH = os.path.join(
+    BASE_DIR,
+    "..", "..", "Crop Disease Detection", "new_leaf_disease_model.h5"
+)
+DISEASE_MODEL_PATH = os.path.normpath(DISEASE_MODEL_PATH)
+
 DISEASE_INPUT_SIZE = (180, 180)
 DISEASE_CLASSES = [
     'Pepper__bell___Bacterial_spot',
@@ -73,17 +80,21 @@ async def detect_disease(file: UploadFile = File(...)):
     if disease_model is None:
         raise HTTPException(status_code=503, detail="Disease model is not loaded.")
     try:
+        print("Step 1 "*10)
         contents = await file.read()
         img = Image.open(BytesIO(contents)).convert('RGB').resize(DISEASE_INPUT_SIZE)
+        print("Step 2 "*10)
         img_array = np.expand_dims(np.array(img, dtype=np.float32), axis=0)
         prediction_output = disease_model.predict(img_array)
         probs = softmax(prediction_output[0]).numpy()
+        print("Step 3 "*10)
         predicted_index = int(np.argmax(probs))
         predicted_class = DISEASE_CLASSES[predicted_index]
+        print("Step 4 "*10)
         confidence = float(probs[predicted_index] * 100)
         status = "Healthy" if "healthy" in predicted_class.lower() else "Disease Detected"
         probability_map = {c: f"{p*100:.2f}%" for c, p in zip(DISEASE_CLASSES, probs)}
-
+        print(f"Step 5  {probability_map}")
         remedy_text = None
         if status == "Disease Detected":
             remedy_text = await get_remedy_from_llama(predicted_class)
