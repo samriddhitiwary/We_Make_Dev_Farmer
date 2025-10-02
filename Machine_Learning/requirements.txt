@@ -24,3 +24,9 @@ jupyterlab
 
 # Kaggle API (dataset downloads)
 kaggle
+fastapi
+uvicorn
+python-multipart
+xgboost
+openapi
+openai
