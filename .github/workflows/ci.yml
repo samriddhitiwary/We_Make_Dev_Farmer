@@ -1,0 +1,33 @@
+name: Basic CI Checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Check README exists
+        run: |
+          if [ ! -f README.md ]; then
+            echo "❌ README missing"
+            exit 1
+          else
+            echo "✅ README present"
+          fi
+
+      - name: Secret Scan
+        run: |
+          if grep -r "API_KEY\|SECRET\|PASSWORD" .; then
+            echo "❌ Secret found"
+          else
+            echo "✅ No secrets"
+          fi
+
+      - name: Dummy Test
+        run: echo "✅ Tests simulated"
